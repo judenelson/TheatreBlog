@@ -189,6 +189,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
+    <Compile Include="Controllers\UserViewModelsController.cs" />
     <Compile Include="Controllers\ViewSwitcherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -201,6 +202,7 @@
     <Compile Include="Models\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -285,6 +287,11 @@
     <Content Include="Views\Shared\_DeleteCmt.cshtml" />
     <Content Include="Views\Shared\_AddComment.cshtml" />
     <Content Include="Views\Shared\_RemoveComment.cshtml" />
+    <Content Include="Views\UserViewModels\Create.cshtml" />
+    <Content Include="Views\UserViewModels\Delete.cshtml" />
+    <Content Include="Views\UserViewModels\Details.cshtml" />
+    <Content Include="Views\UserViewModels\Edit.cshtml" />
+    <Content Include="Views\UserViewModels\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

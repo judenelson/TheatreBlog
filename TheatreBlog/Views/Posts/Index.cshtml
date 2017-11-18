@@ -19,12 +19,11 @@
 
 <h2>Index</h2>
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-@if (User.IsInRole("Admin"))
-{
+
     <p>
         @Html.ActionLink("Make New Announcement", "Create")
     </p>
-}
+
 
 <h1> Announcements</h1>
 
@@ -71,13 +70,12 @@
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.PostID })
 
-                @if (User.IsInRole("Admin"))
-                    {
+              
                     <text>|</text>
                     @Html.ActionLink("Edit", "Edit", new { id = item.PostID })
                     <text>|</text>
                     @Html.ActionLink("Delete", "Delete", new { id = item.PostID })
-                    }
+                    
             </td>
         </tr>
     </table>

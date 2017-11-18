@@ -88,7 +88,30 @@ namespace TheatreBlog
         }
     }
 
+
+    /// <summary>
+    /// Class ApplicationRoleManager.
+    /// 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNet.Identity.RoleManager{Microsoft.AspNet.Identity.EntityFramework.IdentityRole}" />
+    public class ApplicationRoleManager : RoleManager<IdentityRole>
+        {
+            public ApplicationRoleManager(IRoleStore<IdentityRole, string> store) : base(store)
+            {
+            }
+            public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+            {
+                var roleStore = new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>());
+                return new ApplicationRoleManager(roleStore);
+            }
+        }
+    
+
+
     // Configure the application sign-in manager which is used in this application.
+
+
+
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
