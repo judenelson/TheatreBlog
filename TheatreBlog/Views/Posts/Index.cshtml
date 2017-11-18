@@ -1,0 +1,100 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+
+@model IPagedList<TheatreBlog.Models.Post>
+
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    function showComments() {
+        var x = document.getElementById("commentsPanel");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+<h2>Index</h2>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Make New Announcement", "Create")
+    </p>
+}
+
+<h1> Announcements</h1>
+
+
+@foreach (var item in Model)
+{
+    <table class="table">
+        <thead>
+        <th>
+            Post Title
+        </th>
+        </thead>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+        </tr>
+
+        <tr>
+
+            <td class="blogpostcell">
+                <p class="lead">
+                    @Html.DisplayFor(modelItem => item.PostBody)
+                </p>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                Published by  @Html.DisplayFor(modelItem => item.Author)   on @Html.DisplayFor(modelItem => item.PublishDate)
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                <a href="javascript:showComments();">
+                    <img src='@Url.Content("~/Content/images/commentSmall.png")' />
+                </a>@item.Comments.Count;
+        </tr>
+
+        <tr>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.PostID })
+
+                @if (User.IsInRole("Admin"))
+                    {
+                    <text>|</text>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PostID })
+                    <text>|</text>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PostID })
+                    }
+            </td>
+        </tr>
+    </table>
+
+        <div id="commentsPanel" >
+           
+            comments panel
+            @foreach (var com in item.Comments)
+            {
+            <p>@com.CommentText</p>
+            <p>added by <em>@com.Author on @com.CommentDate</em></p>
+            }
+
+
+        </div>
+        @Html.Partial("_AddComment", new TheatreBlog.Models.Comment { PostID = item.PostID })
+
+}
+
+

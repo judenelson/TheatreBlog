@@ -1,0 +1,63 @@
+﻿@model TheatreBlog.Models.Post
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Post</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostBody)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostBody)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PublishDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublishDate)
+        </dd>
+
+    </dl>
+</div>
+@foreach (var cmt in Model.Comments)
+{
+    <hr />
+    <div class="form-group">
+        <div class="editCmt">
+            <p> @cmt.CommentText</p>
+        </div>
+        <div class="editCmt">
+            <p><em>Edited by @cmt.Author on @cmt.CommentDate </em></p>
+        </div>
+    </div>
+
+}
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PostID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,27 @@
+﻿@model TheatreBlog.Models.Comment
+   
+
+    @using (Html.BeginForm("DeleteComment","Posts")) {
+        @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(model=>model.PostID)
+            @Html.HiddenFor(model=>model.CommentID)
+            @Html.HiddenFor(model => model.CommentText)
+
+
+
+        <div class="form-group">
+            <div class="editCmt">
+                <p> @Model.CommentText</p>
+            </div>
+            <div class="editCmt">
+                <p><em>Edited by @Model.Author on @Model.CommentDate </em></p>
+            </div>
+        </div>
+        <div class="form-actions no-color">
+
+            <input type="submit"  value="Delete" class="btn btn-default" /> 
+
+        </div>
+    }
+
