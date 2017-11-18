@@ -19,7 +19,6 @@ namespace TheatreBlog
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Database.SetInitializer<DbContext>(new DropCreateDatabaseIfModelChanges<DbContext>());
-        }
+       }
     }
 }
