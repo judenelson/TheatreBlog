@@ -22,6 +22,7 @@ namespace TheatreBlog.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
         /// <summary>
         /// Runs after upgrading to the latest migration to allow seed data to be updated.

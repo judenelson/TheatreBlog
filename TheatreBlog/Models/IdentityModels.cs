@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using TheatreBlog.Migrations;
 
 namespace TheatreBlog.Models
 {
@@ -33,5 +34,13 @@ namespace TheatreBlog.Models
 
         public DbSet<Post> Posts {get;set;}
         public DbSet<Comment> Comments { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ApplicationDbContext>());
+            modelBuilder.Entity<Post>().ToTable("Posts");
+            modelBuilder.Entity<Comment>().ToTable("Comments");
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
