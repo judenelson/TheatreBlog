@@ -153,8 +153,8 @@ namespace TheatreBlog.Migrations
                 var adminuser = new ApplicationUser();
                 adminuser.UserName = "admin@localtheatre.com";
                 adminuser.Email = "admin@localtheatre.com";
-
-                 userPWD = "Password123!";
+            adminuser.IsAdmin = true;
+            userPWD = "Password123!";
 
                 var chkUser = UserManager.Create(adminuser, userPWD);
 

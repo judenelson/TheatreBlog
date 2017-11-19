@@ -46,6 +46,6 @@ namespace TheatreBlog.Models
             base.OnModelCreating(modelBuilder);
         }
 
-        public System.Data.Entity.DbSet<TheatreBlog.ViewModels.UserViewModel> UserViewModels { get; set; }
+       
     }
 }

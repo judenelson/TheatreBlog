@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -44,12 +46,14 @@ namespace TheatreBlog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            UserViewModel userViewModel = db.UserViewModels.Find(id);
-            if (userViewModel == null)
+            var au = db.Users.Find(id);
+            UserViewModel usr = new UserViewModel {Id =au.Id,IsAdmin =au.IsAdmin, IsSuspended=au.IsSuspended,FullName=au.FullName,Address=au.Address};
+         
+            if (usr == null)
             {
                 return HttpNotFound();
             }
-            return View(userViewModel);
+            return View(usr);
         }
 
         // GET: UserViewModels/Create
@@ -63,16 +67,17 @@ namespace TheatreBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] UserViewModel userViewModel)
+        public ActionResult Create([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
-                db.UserViewModels.Add(userViewModel);
+
+                db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(userViewModel);
+            return View(user);
         }
 
         // GET: UserViewModels/Edit/5
@@ -82,12 +87,14 @@ namespace TheatreBlog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            UserViewModel userViewModel = db.UserViewModels.Find(id);
+            var au = db.Users.Find(id);
+            UserViewModel userViewModel = new UserViewModel { Id = au.Id, IsAdmin = au.IsAdmin, IsSuspended = au.IsSuspended, FullName = au.FullName, Address = au.Address };
+
             if (userViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(userViewModel);
+            return View(au);
         }
 
         // POST: UserViewModels/Edit/5
@@ -95,15 +102,27 @@ namespace TheatreBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] UserViewModel userViewModel)
+        public ActionResult Edit([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] ApplicationUser au)
         {
-            if (ModelState.IsValid)
+             if (ModelState.IsValid)
             {
-                db.Entry(userViewModel).State = EntityState.Modified;
+              
+                db.Entry(au).State = EntityState.Modified;
+
+                var UserManager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(db));
+
+                //Now add the code in the EditAction Result to add / remove the user to the limited role as requested below the code for the admin role
+
+                if ((au.IsSuspended) && (!UserManager.IsInRole(au.Id, "Restricted")))
+                        UserManager.AddToRole(au.Id, "Restricted");
+                  else if ((!au.IsSuspended) && (UserManager.IsInRole(au.Id, "Restricted")))
+                        UserManager.RemoveFromRoles(au.Id, "Restricted");
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
+
             }
-            return View(userViewModel);
+                return View(au);
         }
 
         // GET: UserViewModels/Delete/5
@@ -113,12 +132,16 @@ namespace TheatreBlog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            UserViewModel userViewModel = db.UserViewModels.Find(id);
-            if (userViewModel == null)
+            ApplicationUser au = db.Users.Find(id);
+
+
+            if (au == null)
             {
                 return HttpNotFound();
             }
-            return View(userViewModel);
+            UserViewModel usr = new UserViewModel { Id = au.Id, IsAdmin = au.IsAdmin, IsSuspended = au.IsSuspended, FullName = au.FullName, Address = au.Address };
+
+            return View(usr);
         }
 
         // POST: UserViewModels/Delete/5
@@ -126,8 +149,8 @@ namespace TheatreBlog.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            UserViewModel userViewModel = db.UserViewModels.Find(id);
-            db.UserViewModels.Remove(userViewModel);
+            ApplicationUser usr = db.Users.Find(id);
+            db.Users.Remove(usr);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

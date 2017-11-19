@@ -6,11 +6,16 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using TheatreBlog.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace TheatreBlog
 {
     public partial class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -66,5 +71,48 @@ namespace TheatreBlog
             //    ClientSecret = ""
             //});
         }
+        public void CreateAdminUser()
+        {
+            
+            var db = new ApplicationDbContext();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+
+            // In Startup iam creating first Admin Role and creating a default Admin User    
+            if (!roleManager.RoleExists("Admin"))
+            {
+
+                // first we create Admin role  
+                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                role.Name = "Admin";
+                roleManager.Create(role);
+            }
+
+           
+
+            //Here we create a Admin super user who will maintain the website                  
+
+            var adminuser = new ApplicationUser();
+            adminuser.UserName = "administrator@localtheatre.com";
+            adminuser.Email = "administrator@localtheatre.com";
+            adminuser.IsAdmin = true;
+
+           string userPWD = "Admin123!";
+
+            var chkUser = UserManager.Create(adminuser, userPWD);
+
+            //Add default User to Role Admin   
+            if (chkUser.Succeeded)
+            {
+                var result1 = UserManager.AddToRole(adminuser.Id, "Admin");
+
+            }
+
+    
+
+
+        }
+
     }
 }
