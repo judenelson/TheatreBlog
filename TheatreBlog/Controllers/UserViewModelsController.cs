@@ -102,11 +102,20 @@ namespace TheatreBlog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] ApplicationUser au)
+        public ActionResult Edit([Bind(Include = "Id,IsAdmin,Address,FullName,IsSuspended,Email,UserName")] UserViewModel uvm)
         {
              if (ModelState.IsValid)
             {
-              
+              ApplicationUser au = db.Users.Find(uvm.Id);
+                au.FullName = uvm.FullName;
+                au.Address = uvm.Address;
+                au.Email = uvm.Email;
+                au.UserName = uvm.UserName;
+                au.IsAdmin = uvm.IsAdmin;
+                au.IsSuspended = uvm.IsSuspended;
+
+
+
                 db.Entry(au).State = EntityState.Modified;
 
                 var UserManager = new UserManager<ApplicationUser>(new Microsoft.AspNet.Identity.EntityFramework.UserStore<ApplicationUser>(db));
@@ -122,7 +131,7 @@ namespace TheatreBlog.Controllers
                 return RedirectToAction("Index");
 
             }
-                return View(au);
+                return View(uvm);
         }
 
         // GET: UserViewModels/Delete/5
