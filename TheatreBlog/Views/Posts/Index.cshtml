@@ -7,8 +7,13 @@
     ViewBag.Title = "Index";
 }
 <script>
-    function showComments() {
-        var x = document.getElementById("commentsPanel");
+    function showComments( id) {
+        if (id ==1){
+            var x = document.getElementById("commentsPanel1");
+        }else if (id==2)
+        {
+            var x = document.getElementById("commentsPanel2");
+        }
         if (x.style.display === "none") {
             x.style.display = "block";
         } else {
@@ -27,9 +32,10 @@
 
 <h1> Announcements</h1>
 
-
+@{int i = 0;}
 @foreach (var item in Model)
 {
+    i++;
     <table class="table">
         <thead>
         <th>
@@ -61,7 +67,7 @@
 
         <tr>
             <td>
-                <a href="javascript:showComments();">
+                <a href="javascript:showComments(@i);">
                     <img src='@Url.Content("~/Content/images/commentSmall.png")' />
                 </a>@item.Comments.Count;
         </tr>
@@ -79,18 +85,20 @@
             </td>
         </tr>
     </table>
+    <div id="commentsPanel@@i" >
 
-        <div id="commentsPanel" >
-           
-            comments panel
-            @foreach (var com in item.Comments)
-            {
+
+        // comments panel
+        @foreach (var com in item.Comments)
+        {
+
             <p>@com.CommentText</p>
             <p>added by <em>@com.Author on @com.CommentDate</em></p>
-            }
+
+        }
+    </div>
 
 
-        </div>
         @Html.Partial("_AddComment", new TheatreBlog.Models.Comment { PostID = item.PostID })
 
 }
